@@ -13,7 +13,7 @@ const isValid = (username) => {
 
 const authenticatedUser = (username,password) => {
 	const filtered = users.filter(item => (item.username === username && item.password === password));
-	return filtered.length == 1;
+	return filtered.length === 1;
 }
 
 //only registered users can login
@@ -21,7 +21,7 @@ regd_users.post("/login", (req,res) => {
 	const {username, password} = req.body;
 
 	if (!authenticatedUser(username, password)) {
-		return res.send('Invalid Credentials');
+		return res.send({"message":"Invalid Credentials"});
 	}
 
 	let accessToken = jwt.sign({
@@ -31,7 +31,7 @@ regd_users.post("/login", (req,res) => {
 	req.session.authorization = {
 		accessToken, username
 	};
-	return res.status(200).send("User successfully logged in");
+	return res.status(200).send({"message":"User successfully logged in"});
 });
 
 // Add a book review
@@ -75,10 +75,10 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
 	if (entry.length > 0) {
 		const [key] = entry;
 		delete books[isbn].reviews[key];
-		return res.send('Book review deleted');
+		return res.status(200).send({"message":"Review deleted"});
 	}
 
-	return res.send('No review to Delete');
+	return res.status(200).send({"message":"No review to Delete"});
 });
 
 module.exports.authenticated = regd_users;
