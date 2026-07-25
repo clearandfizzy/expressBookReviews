@@ -6,12 +6,13 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req,res) => {
-	const {username, password} = JSON.parse(req.body);
-	console.log(JSON.parse(req.body));
-	console.log(username, password);
+	const {username, password} = req.body;
 
+	if (username === '' || password === '' || !isValid(username)){
+		res.send('Username is invalid');
+	}
 
-	return res.status(300).json({message: "Yet to be implemented"});
+	users.push({username, password});
 });
 
 // Get the book list available in the shop
