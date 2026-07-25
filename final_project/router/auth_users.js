@@ -13,7 +13,7 @@ const isValid = (username) => {
 
 const authenticatedUser = (username,password) => {
 	const filtered = users.filter(item => (item.username === username && item.password === password));
-	return filtered.length === 1;
+	return filtered.length == 1;
 }
 
 //only registered users can login
@@ -44,7 +44,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 	const filtered = items.filter(item => item[0] === isbn);
 
 	if (filtered.length < 1) {
-		res.send('ISBN not found');
+		res.send({"message": "ISBN not found"});
 	}
 
 	let reviews = Object.entries(books[isbn].reviews);
@@ -53,12 +53,13 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 	if (filtered_reviews.length  === 0) {
 		const reviewLength = books[isbn].reviews.length ?? 0;
 		books[isbn].reviews[reviewLength] =  {username, review};
-		return res.send('Review Added');
+		return res.send({"message":"Review added/updated successfully","review": {username, review}});
 	}
 
 	const key = filtered_reviews[0][0];
 	books[isbn].reviews[key] = {username, review};
-	return res.send('Review Updated');
+
+	return res.send({"message":"Review added/updated successfully","review": {username, review}});
 
 });
 

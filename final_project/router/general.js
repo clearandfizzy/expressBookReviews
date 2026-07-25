@@ -42,9 +42,21 @@ public_users.get('/task11', async function (req, res) {
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
 	const {author} = req.params;
-	const items = Object.entries(books);
-	const filtered = items.filter(item => item[1].author === author);
-	return res.send(filtered);
+	const filtered = Object.entries(books).filter(
+		([key, value]) => value.author === author
+	);
+
+	const results = filtered.map(([key, value]) => ({
+			isbn: key,
+			...value
+		})
+	)
+
+	if (results.length === 0) {
+		return res.status(404).send({"message": "No books found with that author name"});
+	}
+
+	return res.send(results);
 });
 
 public_users.get('/task12', async function (req, res) {
